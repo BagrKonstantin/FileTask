@@ -1,4 +1,4 @@
-package org.example;
+package org.example.program;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -7,8 +7,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyFile implements Comparable {
-    private ArrayList<Path> dependencies = new ArrayList<>();
+public class MyFile {
+    private final ArrayList<Path> dependencies = new ArrayList<>();
     private String data;
     private final Path filepath;
     private final String name;
@@ -16,13 +16,23 @@ public class MyFile implements Comparable {
     private boolean written = false;
     private static final Pattern pattern = Pattern.compile("require ‘(?<path>.*)’");
 
-     private static String root;
+    private static String root;
+
+    /**
+     * Reads file data and store it.
+     * @param filepath filepath to file to read data from
+     * @throws IOException if file is closed for reading
+     */
     MyFile(Path filepath) throws IOException {
         this.filepath = filepath;
         name = filepath.getFileName().toString();
         scanFile();
     }
 
+    /**
+     * Reads data from file and search for dependencies
+     * @throws IOException if file closed for reading
+     */
     private void scanFile() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -74,13 +84,17 @@ public class MyFile implements Comparable {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return this.data;
+    /**
+     * Compares files in alphabetic order of their names
+     * @param otherFile file to compare with
+     * @return comparison of file names
+     */
+    public int compareTo(MyFile otherFile) {
+        return name.compareTo(otherFile.name);
     }
 
     @Override
-    public int compareTo(Object o) {
-        return name.compareTo(((MyFile)o).name);
+    public String toString() {
+        return this.data;
     }
 }
